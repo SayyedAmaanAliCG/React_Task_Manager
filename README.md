@@ -9,7 +9,5 @@ i created different components for header tasks table and forms.
 
 ![Reference image](images/i3.png)
 
-![Reference image](images/i4.png)
-
 ![Reference image](images/i5.png)
 
