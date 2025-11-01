@@ -1,0 +1,11 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+h1 {
+  text-align: center;
+}
