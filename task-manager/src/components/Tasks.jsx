@@ -10,19 +10,23 @@ function Tasks(props){
     const [data, setData] = useState(props.data || []);
     const [size, setSize] = useState((props.data && props.data.length) || 0);
     const [task, setTask] = useState(null);
+    const [filteredTasks, setFilteredTasks] = useState([]);
+    const [filter, setFilter] = useState('all');
     const [editOpen, setEditOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
 
     useEffect(() => {
-        setData(props.data || []);
-        setSize((props.data && props.data.length) || 0);
-    }, [props.data]);
-
-    useEffect(() => {
-        if (props.setData) props.setData(data);
-        setSize(data ? data.length : 0);
-    }, [data, props.setData]);
+        props.setData(data);
+        setData(data);
+        const ft = data.filter(task => {
+            if(filter==='active') return !task.completed;
+            if(filter==='completed') return task.completed;
+            else return true;
+        });
+        setFilteredTasks(ft);
+        setSize(ft.length);
+    }, [data, filter]);
 
     function handleAddData() {
         setAddOpen(true);
@@ -65,12 +69,31 @@ function Tasks(props){
         ));
     }
 
+    function clearAll() {
+        setData(prev => prev.filter(task => !task.completed));
+    }
+
 
     return (
         <div className="tasks-container">
             <div className="show-taks">
                 <div className="record-data">
                     <h3>Total Tasks: {size}</h3>
+                    <div className="filter-buttons">
+                        <p>Filter: </p>
+                        <button onClick={() => setFilter('active')}>
+                            Active
+                        </button>
+                        <button onClick={() => setFilter('completed')}>
+                            Completed
+                        </button>
+                        <button onClick={() => setFilter('all')}>
+                            Clear
+                        </button>
+                    </div>
+                    <button className="clear-button" onClick={() => clearAll()}>
+                        Remove completed task
+                    </button>
                     <button onClick={() => handleAddData()}>
                         <Plus size={20}/>
                     </button>
@@ -91,7 +114,7 @@ function Tasks(props){
                                     <td colSpan={4} className="empty-row">No records yet</td>
                                 </tr>
                             ) : (
-                                (data || []).map(task => (
+                                (filteredTasks || []).map(task => (
                                     <tr key={task.id}>
                                         <td>
                                             {task.id}
